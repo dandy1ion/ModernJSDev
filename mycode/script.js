@@ -277,3 +277,7 @@ console.log(ShoppingCart2);
 
 /////////////////////////////////////////////////////////
 //INTRODUCTION TO NPM
+//NODE PACKAGE MANAGER
+//both software on computer and a package repository
+//manage dependencies better
+//npm in terminal
