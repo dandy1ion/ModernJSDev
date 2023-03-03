@@ -1,4 +1,3 @@
-/*
 /////////////////////////////////////////////////
 //All modules executed in strict mode by default
 //Module=reusable piece of code that encapsulates implementation details
@@ -60,6 +59,7 @@ add('apples', 4);
 
 console.log(cart); //now empty array has the items added
 
+/*
 //////////////////////////////////////////
 //TOP-LEVEL AWAIT
 //normally would write async function(){...};
@@ -280,4 +280,83 @@ console.log(ShoppingCart2);
 //NODE PACKAGE MANAGER
 //both software on computer and a package repository
 //manage dependencies better
-//npm in terminal
+//npm -v in terminal (see version/know working)
+
+//include cloneDeep.js
+//import cloneDeep from './node_modules/lodash-es/cloneDeep.js';
+//with bundler:
+import cloneDeep from 'lodash-es/cloneDeep.js';
+//or this: import cloneDeep from 'lodash-es';
+
+//hard to copy a nested object
+const state = {
+  cart: [
+    { product: 'bread', quantity: 5 },
+    { product: 'pizza', quantity: 5 },
+  ],
+  user: { loggedIn: true },
+};
+const stateClone = Object.assign({}, state);
+//Lodash function
+const stateDeepClone = cloneDeep(state);
+console.log(stateClone);
+state.user.loggedIn = false;
+console.log(stateClone); //loggedIn: false
+
+console.log(stateDeepClone); //loggedIn: true
+
+//////////////////////////////////////////////////////
+//BUNDLING WITH PARCEL AND NPM SCRIPTS
+//now every time we save our file it will reload in the parcel server
+//(just like live server)
+//terminal: npx parcel index.html
+
+//HOT MODULE REPLACEMENT
+//only parcel understands this = not in final code
+if (module.hot) {
+  module.hot.accept();
+}
+//change module triggers a rebuild but that new modified module
+//will, like magic, get injected into the browser
+//without triggering a whole page reload
+
+//////////////////////////////////////////////////////
+//CONFIGURING BABEL AND POLYFILLING
+
+//automatically transpiled with BABEL:
+//auto makes syntax changes
+class Person {
+  #greeting = 'Hey';
+  constructor(name) {
+    this.name = name;
+    console.log(`${this.#greeting}, ${this.name}`);
+  }
+}
+const jonas = new Person('Jonass');
+
+//nullish-coalescing-operator
+console.log('Jonas' ?? null);
+
+//new features need to be pollyfilled:
+//ES6 find method
+console.log(cart.find(el => el.quantity >= 2));
+
+//ES6 promises
+Promise.resolve('TEST').then(x => console.log(x));
+
+//import library for pollyfill
+//manually add first in terminal: npm i core-js
+import 'core-js/stable';
+//reduce bundle size:
+//import 'core-js/stable/array/find';
+//import 'core-js/stable/promise';
+//pollyfill recreates the function (ex find) and makes it available to this bundle
+//search Array.prototype.find in bundled .js file
+//where all the array methods are put
+//Promise pollyfilled another way
+
+//install regenerator-runtime
+//terminal: npm i regenerator-runtime
+//for POLYFILLING ASYNC FUNCTIONS
+import 'regenerator-runtime/runtime';
+//***usually put all imports at top of file***
